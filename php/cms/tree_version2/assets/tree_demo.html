@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tree类可视化演示 - 交互式树形结构</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <header class="header">
+            <h1><i class="fas fa-sitemap"></i> Tree类可视化演示</h1>
+            <p>交互式树形结构展示，学习PHP Tree类的最佳伴侣</p>
+        </header>
+
+        <!-- 控制面板 -->
+        <div class="control-panel">
+            <div class="demo-selector">
+                <label for="demo-select"><i class="fas fa-list"></i> 选择演示数据：</label>
+                <select id="demo-select">
+                    <option value="company">公司组织架构</option>
+                    <option value="ecommerce">电商分类系统</option>
+                    <option value="education">在线教育课程</option>
+                    <option value="menu">网站导航菜单</option>
+                    <option value="filesystem">文件系统结构</option>
+                </select>
+                <button id="load-demo" class="btn btn-primary">
+                    <i class="fas fa-sync-alt"></i> 加载演示
+                </button>
+            </div>
+
+            <div class="tree-controls">
+                <button id="expand-all" class="btn btn-success">
+                    <i class="fas fa-expand-arrows-alt"></i> 全部展开
+                </button>
+                <button id="collapse-all" class="btn btn-warning">
+                    <i class="fas fa-compress-arrows-alt"></i> 全部折叠
+                </button>
+                <button id="reset-demo" class="btn btn-info">
+                    <i class="fas fa-redo"></i> 重置演示
+                </button>
+            </div>
+
+            <div class="view-options">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="show-ids" checked>
+                    <span>显示节点ID</span>
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="show-path">
+                    <span>显示路径信息</span>
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="animate-toggle" checked>
+                    <span>动画效果</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- 主要内容区域 -->
+        <div class="main-content">
+            <!-- 树形结构显示区域 -->
+            <div class="tree-container">
+                <div class="tree-header">
+                    <h2><i class="fas fa-tree"></i> 树形结构</h2>
+                    <div class="tree-stats">
+                        <span class="stat">节点总数: <span id="total-nodes">0</span></span>
+                        <span class="stat">最大深度: <span id="max-depth">0</span></span>
+                        <span class="stat">叶子节点: <span id="leaf-nodes">0</span></span>
+                    </div>
+                </div>
+                <div id="tree-display" class="tree-display">
+                    <!-- 树形结构将在这里动态生成 -->
+                </div>
+            </div>
+
+            <!-- 信息面板 -->
+            <div class="info-panel">
+                <div class="selected-node-info">
+                    <h3><i class="fas fa-info-circle"></i> 节点信息</h3>
+                    <div id="node-details">
+                        <p class="placeholder">点击树形结构中的节点查看详细信息</p>
+                    </div>
+                </div>
+
+                <div class="tree-operations">
+                    <h3><i class="fas fa-tools"></i> 树操作演示</h3>
+                    <div class="operation-buttons">
+                        <button id="find-path" class="btn btn-outline">
+                            <i class="fas fa-route"></i> 查找路径
+                        </button>
+                        <button id="find-siblings" class="btn btn-outline">
+                            <i class="fas fa-users"></i> 查找兄弟节点
+                        </button>
+                        <button id="find-descendants" class="btn btn-outline">
+                            <i class="fas fa-sitemap"></i> 查找所有子孙
+                        </button>
+                        <button id="calculate-depth" class="btn btn-outline">
+                            <i class="fas fa-layer-group"></i> 计算深度
+                        </button>
+                    </div>
+                    <div id="operation-result" class="operation-result">
+                        <!-- 操作结果将显示在这里 -->
+                    </div>
+                </div>
+
+                <div class="code-example">
+                    <h3><i class="fas fa-code"></i> PHP代码示例</h3>
+                    <pre id="code-display"><code>// 选择一个节点查看对应的PHP代码示例
+// 例如获取子节点：
+$children = $tree->getChildren($nodeId);
+
+// 获取节点路径：
+$path = $tree->getPath($nodeId);
+
+// 判断是否为叶子节点：
+$isLeaf = $tree->isLeaf($nodeId);</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- 使用说明 -->
+        <div class="instructions">
+            <h2><i class="fas fa-question-circle"></i> 使用说明</h2>
+            <div class="instruction-grid">
+                <div class="instruction-item">
+                    <i class="fas fa-mouse-pointer"></i>
+                    <h4>交互操作</h4>
+                    <p>点击节点查看详细信息，点击展开/折叠图标控制子节点显示</p>
+                </div>
+                <div class="instruction-item">
+                    <i class="fas fa-eye"></i>
+                    <h4>视觉效果</h4>
+                    <p>不同类型的节点有不同的颜色和图标，便于区分层级关系</p>
+                </div>
+                <div class="instruction-item">
+                    <i class="fas fa-cogs"></i>
+                    <h4>功能演示</h4>
+                    <p>尝试不同的Tree类方法，查看实时的操作结果和代码示例</p>
+                </div>
+                <div class="instruction-item">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h4>学习辅助</h4>
+                    <p>结合实际代码练习，加深对树形数据结构的理解</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 页脚 -->
+        <footer class="footer">
+            <p>&copy; 2024 Tree学习项目 | 
+                <a href="../README.md"><i class="fas fa-book"></i> 查看文档</a> | 
+                <a href="../examples/"><i class="fas fa-code"></i> 代码示例</a> | 
+                <a href="../exercises/"><i class="fas fa-dumbbell"></i> 练习题</a>
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // 演示数据
+        const demoData = {
+            company: {
+                name: "公司组织架构",
+                data: {
+                    1: {id: 1, parentid: 0, name: "总经理办公室", type: "department", level: 1},
+                    2: {id: 2, parentid: 1, name: "技术部", type: "department", level: 2},
+                    3: {id: 3, parentid: 1, name: "市场部", type: "department", level: 2},
+                    4: {id: 4, parentid: 1, name: "财务部", type: "department", level: 2},
+                    5: {id: 5, parentid: 2, name: "开发组", type: "team", level: 3},
+                    6: {id: 6, parentid: 2, name: "测试组", type: "team", level: 3},
+                    7: {id: 7, parentid: 3, name: "市场推广组", type: "team", level: 3},
+                    8: {id: 8, parentid: 3, name: "客服组", type: "team", level: 3},
+                    9: {id: 9, parentid: 5, name: "前端开发", type: "position", level: 4},
+                    10: {id: 10, parentid: 5, name: "后端开发", type: "position", level: 4},
+                    11: {id: 11, parentid: 5, name: "UI设计", type: "position", level: 4}
+                }
+            },
+            ecommerce: {
+                name: "电商分类系统",
+                data: {
+                    1: {id: 1, parentid: 0, name: "电子产品", type: "category", products: 1500},
+                    2: {id: 2, parentid: 0, name: "服装鞋帽", type: "category", products: 2300},
+                    3: {id: 3, parentid: 0, name: "家居用品", type: "category", products: 800},
+                    4: {id: 4, parentid: 1, name: "手机通讯", type: "subcategory", products: 500},
+                    5: {id: 5, parentid: 1, name: "电脑办公", type: "subcategory", products: 600},
+                    6: {id: 6, parentid: 1, name: "数码相机", type: "subcategory", products: 400},
+                    7: {id: 7, parentid: 4, name: "智能手机", type: "product", price: 3999},
+                    8: {id: 8, parentid: 4, name: "老人手机", type: "product", price: 299},
+                    9: {id: 9, parentid: 5, name: "笔记本电脑", type: "product", price: 5999},
+                    10: {id: 10, parentid: 5, name: "台式电脑", type: "product", price: 4599}
+                }
+            },
+            education: {
+                name: "在线教育课程",
+                data: {
+                    1: {id: 1, parentid: 0, name: "编程开发", type: "category", courses: 0},
+                    2: {id: 2, parentid: 0, name: "设计创意", type: "category", courses: 0},
+                    3: {id: 3, parentid: 1, name: "前端开发", type: "subcategory", courses: 0},
+                    4: {id: 4, parentid: 1, name: "后端开发", type: "subcategory", courses: 0},
+                    5: {id: 5, parentid: 2, name: "UI设计", type: "subcategory", courses: 0},
+                    6: {id: 6, parentid: 3, name: "HTML/CSS基础", type: "course", price: 199, students: 1250},
+                    7: {id: 7, parentid: 3, name: "JavaScript进阶", type: "course", price: 299, students: 980},
+                    8: {id: 8, parentid: 4, name: "Python基础", type: "course", price: 249, students: 1456},
+                    9: {id: 9, parentid: 4, name: "Node.js开发", type: "course", price: 349, students: 567},
+                    10: {id: 10, parentid: 5, name: "Photoshop精通", type: "course", price: 299, students: 890}
+                }
+            },
+            menu: {
+                name: "网站导航菜单",
+                data: {
+                    1: {id: 1, parentid: 0, name: "首页", type: "menu", url: "/"},
+                    2: {id: 2, parentid: 0, name: "产品中心", type: "menu", url: "/products"},
+                    3: {id: 3, parentid: 0, name: "新闻中心", type: "menu", url: "/news"},
+                    4: {id: 4, parentid: 0, name: "关于我们", type: "menu", url: "/about"},
+                    5: {id: 5, parentid: 2, name: "手机产品", type: "submenu", url: "/products/phone"},
+                    6: {id: 6, parentid: 2, name: "电脑产品", type: "submenu", url: "/products/computer"},
+                    7: {id: 7, parentid: 3, name: "公司新闻", type: "submenu", url: "/news/company"},
+                    8: {id: 8, parentid: 3, name: "行业动态", type: "submenu", url: "/news/industry"},
+                    9: {id: 9, parentid: 5, name: "iPhone系列", type: "item", url: "/products/phone/iphone"},
+                    10: {id: 10, parentid: 5, name: "安卓手机", type: "item", url: "/products/phone/android"}
+                }
+            },
+            filesystem: {
+                name: "文件系统结构",
+                data: {
+                    1: {id: 1, parentid: 0, name: "项目根目录", type: "folder", size: ""},
+                    2: {id: 2, parentid: 1, name: "src", type: "folder", size: ""},
+                    3: {id: 3, parentid: 1, name: "assets", type: "folder", size: ""},
+                    4: {id: 4, parentid: 1, name: "docs", type: "folder", size: ""},
+                    5: {id: 5, parentid: 2, name: "components", type: "folder", size: ""},
+                    6: {id: 6, parentid: 2, name: "utils", type: "folder", size: ""},
+                    7: {id: 7, parentid: 5, name: "Header.php", type: "file", size: "2.3KB"},
+                    8: {id: 8, parentid: 5, name: "Footer.php", type: "file", size: "1.8KB"},
+                    9: {id: 9, parentid: 6, name: "Tree.php", type: "file", size: "15.6KB"},
+                    10: {id: 10, parentid: 3, name: "style.css", type: "file", size: "8.9KB"}
+                }
+            }
+        };
+
+        // 当前数据和状态
+        let currentData = {};
+        let selectedNode = null;
+        let expandedNodes = new Set();
+
+        // 工具函数：获取节点图标
+        function getNodeIcon(node) {
+            const icons = {
+                department: 'fas fa-building',
+                team: 'fas fa-users',
+                position: 'fas fa-user',
+                category: 'fas fa-folder',
+                subcategory: 'fas fa-folder-open',
+                product: 'fas fa-box',
+                course: 'fas fa-graduation-cap',
+                menu: 'fas fa-home',
+                submenu: 'fas fa-list',
+                item: 'fas fa-link',
+                folder: 'fas fa-folder',
+                file: 'fas fa-file'
+            };
+            return icons[node.type] || 'fas fa-circle';
+        }
+
+        // 工具函数：获取节点CSS类
+        function getNodeClass(node) {
+            return `node-${node.type}`;
+        }
+
+        // 工具函数：获取子节点
+        function getChildren(parentId) {
+            return Object.values(currentData).filter(node => node.parentid == parentId);
+        }
+
+        // 工具函数：判断是否有子节点
+        function hasChildren(nodeId) {
+            return getChildren(nodeId).length > 0;
+        }
+
+        // 工具函数：获取节点路径
+        function getNodePath(nodeId) {
+            const path = [];
+            let currentNode = currentData[nodeId];
+            
+            while (currentNode) {
+                path.unshift(currentNode.name);
+                if (currentNode.parentid == 0) break;
+                currentNode = currentData[currentNode.parentid];
+            }
+            
+            return path.join(' > ');
+        }
+
+        // 工具函数：计算最大深度
+        function calculateMaxDepth() {
+            let maxDepth = 0;
+            
+            function getDepth(nodeId, depth = 1) {
+                maxDepth = Math.max(maxDepth, depth);
+                const children = getChildren(nodeId);
+                children.forEach(child => getDepth(child.id, depth + 1));
+            }
+            
+            const roots = getChildren(0);
+            roots.forEach(root => getDepth(root.id));
+            
+            return maxDepth;
+        }
+
+        // 工具函数：统计叶子节点
+        function countLeafNodes() {
+            return Object.values(currentData).filter(node => !hasChildren(node.id)).length;
+        }
+
+        // 渲染树节点
+        function renderNode(node, level = 0) {
+            const hasChildNodes = hasChildren(node.id);
+            const isExpanded = expandedNodes.has(node.id);
+            const showIds = document.getElementById('show-ids').checked;
+            const showPath = document.getElementById('show-path').checked;
+            
+            let html = `
+                <div class="tree-node ${getNodeClass(node)} ${selectedNode === node.id ? 'selected' : ''}" 
+                     data-node-id="${node.id}" data-level="${level}">
+                    <div class="node-content">
+                        <span class="node-toggle ${hasChildNodes ? (isExpanded ? 'expanded' : 'collapsed') : 'no-children'}"
+                              data-node-id="${node.id}">
+                            ${hasChildNodes ? (isExpanded ? '▼' : '▶') : '•'}
+                        </span>
+                        <span class="node-icon">
+                            <i class="${getNodeIcon(node)}"></i>
+                        </span>
+                        <span class="node-name" data-node-id="${node.id}">
+                            ${node.name}
+                            ${showIds ? `<span class="node-id">#${node.id}</span>` : ''}
+                        </span>
+                        ${showPath ? `<span class="node-path">${getNodePath(node.id)}</span>` : ''}
+                    </div>
+            `;
+            
+            if (hasChildNodes && isExpanded) {
+                html += '<div class="node-children">';
+                const children = getChildren(node.id);
+                children.forEach(child => {
+                    html += renderNode(child, level + 1);
+                });
+                html += '</div>';
+            }
+            
+            html += '</div>';
+            return html;
+        }
+
+        // 渲染整个树
+        function renderTree() {
+            const container = document.getElementById('tree-display');
+            const roots = getChildren(0);
+            
+            let html = '';
+            roots.forEach(root => {
+                html += renderNode(root);
+            });
+            
+            container.innerHTML = html || '<p class="no-data">没有数据可显示</p>';
+            
+            // 更新统计信息
+            updateStats();
+            
+            // 绑定事件
+            bindTreeEvents();
+        }
+
+        // 更新统计信息
+        function updateStats() {
+            document.getElementById('total-nodes').textContent = Object.keys(currentData).length;
+            document.getElementById('max-depth').textContent = calculateMaxDepth();
+            document.getElementById('leaf-nodes').textContent = countLeafNodes();
+        }
+
+        // 绑定树形结构事件
+        function bindTreeEvents() {
+            // 展开/折叠事件
+            document.querySelectorAll('.node-toggle').forEach(toggle => {
+                toggle.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const nodeId = parseInt(this.dataset.nodeId);
+                    
+                    if (hasChildren(nodeId)) {
+                        if (expandedNodes.has(nodeId)) {
+                            expandedNodes.delete(nodeId);
+                        } else {
+                            expandedNodes.add(nodeId);
+                        }
+                        
+                        if (document.getElementById('animate-toggle').checked) {
+                            this.style.transform = 'rotate(180deg)';
+                            setTimeout(() => {
+                                this.style.transform = '';
+                                renderTree();
+                            }, 150);
+                        } else {
+                            renderTree();
+                        }
+                    }
+                });
+            });
+
+            // 节点选择事件
+            document.querySelectorAll('.node-name').forEach(name => {
+                name.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const nodeId = parseInt(this.dataset.nodeId);
+                    selectNode(nodeId);
+                });
+            });
+        }
+
+        // 选择节点
+        function selectNode(nodeId) {
+            selectedNode = nodeId;
+            renderTree();
+            showNodeDetails(currentData[nodeId]);
+            generateCodeExample(nodeId);
+        }
+
+        // 显示节点详细信息
+        function showNodeDetails(node) {
+            const container = document.getElementById('node-details');
+            const children = getChildren(node.id);
+            const isLeaf = !hasChildren(node.id);
+            
+            let html = `
+                <div class="node-detail-card">
+                    <h4><i class="${getNodeIcon(node)}"></i> ${node.name}</h4>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <span class="label">节点ID:</span>
+                            <span class="value">${node.id}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">父节点ID:</span>
+                            <span class="value">${node.parentid}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">节点类型:</span>
+                            <span class="value">${node.type}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">路径:</span>
+                            <span class="value">${getNodePath(node.id)}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">子节点数:</span>
+                            <span class="value">${children.length}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">是否叶子节点:</span>
+                            <span class="value">${isLeaf ? '是' : '否'}</span>
+                        </div>
+            `;
+
+            // 显示额外属性
+            Object.keys(node).forEach(key => {
+                if (!['id', 'parentid', 'name', 'type'].includes(key)) {
+                    html += `
+                        <div class="detail-item">
+                            <span class="label">${key}:</span>
+                            <span class="value">${node[key]}</span>
+                        </div>
+                    `;
+                }
+            });
+
+            html += `</div></div>`;
+            container.innerHTML = html;
+        }
+
+        // 生成代码示例
+        function generateCodeExample(nodeId) {
+            const container = document.getElementById('code-display');
+            const node = currentData[nodeId];
+            
+            const code = `// 选中节点: ${node.name} (ID: ${nodeId})
+
+// 获取节点信息
+$node = $tree->data[${nodeId}];
+// 结果: ${JSON.stringify(node, null, 2).replace(/\n/g, '\\n//        ')}
+
+// 获取子节点
+$children = $tree->getChildren(${nodeId});
+// 子节点数量: ${getChildren(nodeId).length}
+
+// 获取节点路径
+$path = $tree->getPathString(${nodeId});
+// 路径: "${getNodePath(nodeId)}"
+
+// 判断是否为叶子节点
+$isLeaf = $tree->isLeaf(${nodeId});
+// 结果: ${!hasChildren(nodeId) ? 'true' : 'false'}
+
+// 获取父节点
+${node.parentid > 0 ? `$parent = $tree->getParent(${nodeId});
+// 父节点: ${currentData[node.parentid]?.name || '未找到'}` : '// 这是根节点，没有父节点'}`;
+            
+            container.innerHTML = `<code>${code}</code>`;
+        }
+
+        // 加载演示数据
+        function loadDemo(demoType) {
+            const demo = demoData[demoType];
+            if (!demo) return;
+            
+            currentData = demo.data;
+            selectedNode = null;
+            expandedNodes.clear();
+            
+            // 默认展开根节点
+            const roots = getChildren(0);
+            roots.forEach(root => expandedNodes.add(root.id));
+            
+            renderTree();
+            
+            // 清空详细信息
+            document.getElementById('node-details').innerHTML = '<p class="placeholder">点击树形结构中的节点查看详细信息</p>';
+            document.getElementById('operation-result').innerHTML = '';
+        }
+
+        // 树操作函数
+        function performTreeOperation(operation) {
+            if (!selectedNode) {
+                alert('请先选择一个节点！');
+                return;
+            }
+            
+            const resultContainer = document.getElementById('operation-result');
+            const node = currentData[selectedNode];
+            let result = '';
+            
+            switch (operation) {
+                case 'find-path':
+                    result = `<h4>路径查找结果:</h4><p>${getNodePath(selectedNode)}</p>`;
+                    break;
+                
+                case 'find-siblings':
+                    const siblings = Object.values(currentData).filter(n => 
+                        n.parentid === node.parentid && n.id !== selectedNode
+                    );
+                    result = `<h4>兄弟节点 (${siblings.length}个):</h4>`;
+                    if (siblings.length > 0) {
+                        result += '<ul>' + siblings.map(s => `<li>${s.name} (#${s.id})</li>`).join('') + '</ul>';
+                    } else {
+                        result += '<p>没有兄弟节点</p>';
+                    }
+                    break;
+                
+                case 'find-descendants':
+                    function getAllDescendants(nodeId) {
+                        let descendants = [];
+                        const children = getChildren(nodeId);
+                        children.forEach(child => {
+                            descendants.push(child);
+                            descendants = descendants.concat(getAllDescendants(child.id));
+                        });
+                        return descendants;
+                    }
+                    
+                    const descendants = getAllDescendants(selectedNode);
+                    result = `<h4>所有子孙节点 (${descendants.length}个):</h4>`;
+                    if (descendants.length > 0) {
+                        result += '<ul>' + descendants.map(d => `<li>${d.name} (#${d.id})</li>`).join('') + '</ul>';
+                    } else {
+                        result += '<p>没有子孙节点</p>';
+                    }
+                    break;
+                
+                case 'calculate-depth':
+                    function getNodeDepth(nodeId) {
+                        let depth = 1;
+                        let current = currentData[nodeId];
+                        while (current && current.parentid !== 0) {
+                            depth++;
+                            current = currentData[current.parentid];
+                        }
+                        return depth;
+                    }
+                    
+                    const depth = getNodeDepth(selectedNode);
+                    result = `<h4>节点深度:</h4><p>第 ${depth} 层</p>`;
+                    break;
+            }
+            
+            resultContainer.innerHTML = result;
+        }
+
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function() {
+            // 加载默认演示
+            loadDemo('company');
+            
+            // 绑定控件事件
+            document.getElementById('load-demo').addEventListener('click', function() {
+                const demoType = document.getElementById('demo-select').value;
+                loadDemo(demoType);
+            });
+            
+            document.getElementById('expand-all').addEventListener('click', function() {
+                Object.values(currentData).forEach(node => {
+                    if (hasChildren(node.id)) {
+                        expandedNodes.add(node.id);
+                    }
+                });
+                renderTree();
+            });
+            
+            document.getElementById('collapse-all').addEventListener('click', function() {
+                expandedNodes.clear();
+                renderTree();
+            });
+            
+            document.getElementById('reset-demo').addEventListener('click', function() {
+                const demoType = document.getElementById('demo-select').value;
+                loadDemo(demoType);
+            });
+            
+            // 视图选项
+            document.getElementById('show-ids').addEventListener('change', renderTree);
+            document.getElementById('show-path').addEventListener('change', renderTree);
+            
+            // 树操作按钮
+            document.getElementById('find-path').addEventListener('click', () => performTreeOperation('find-path'));
+            document.getElementById('find-siblings').addEventListener('click', () => performTreeOperation('find-siblings'));
+            document.getElementById('find-descendants').addEventListener('click', () => performTreeOperation('find-descendants'));
+            document.getElementById('calculate-depth').addEventListener('click', () => performTreeOperation('calculate-depth'));
+        });
+    </script>
+</body>
+</html>
