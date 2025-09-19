@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>递归可视化演示</title>
+    <link rel="stylesheet" href="../assets/css/visualization.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>递归可视化演示</h1>
+            <p>通过动画直观理解递归的执行过程</p>
+        </header>
+
+        <nav class="demo-selector">
+            <button class="demo-btn active" data-demo="factorial">阶乘</button>
+            <button class="demo-btn" data-demo="fibonacci">斐波那契</button>
+            <button class="demo-btn" data-demo="tower">汉诺塔</button>
+            <button class="demo-btn" data-demo="tree">二叉树遍历</button>
+        </nav>
+
+        <!-- 阶乘演示 -->
+        <div id="factorial-demo" class="demo-container active">
+            <h2>阶乘递归演示</h2>
+            <div class="controls">
+                <label>
+                    计算 n! : 
+                    <input type="number" id="factorial-input" min="0" max="10" value="5">
+                </label>
+                <button id="factorial-start">开始演示</button>
+                <button id="factorial-reset">重置</button>
+                <label>
+                    <input type="checkbox" id="factorial-auto"> 自动播放
+                </label>
+                <label>
+                    速度: <input type="range" id="factorial-speed" min="1" max="10" value="5">
+                </label>
+            </div>
+            
+            <div class="visualization-area">
+                <div class="call-stack">
+                    <h3>调用栈</h3>
+                    <div id="factorial-stack" class="stack-container"></div>
+                </div>
+                
+                <div class="execution-flow">
+                    <h3>执行流程</h3>
+                    <div id="factorial-flow" class="flow-container"></div>
+                </div>
+                
+                <div class="code-trace">
+                    <h3>代码追踪</h3>
+                    <pre id="factorial-code">
+function factorial(n) {
+    <span class="line" data-line="1">if (n <= 1) {</span>
+        <span class="line" data-line="2">return 1;</span>
+    <span class="line" data-line="3">}</span>
+    <span class="line" data-line="4">return n * factorial(n - 1);</span>
+<span class="line" data-line="5">}</span>
+                    </pre>
+                </div>
+            </div>
+            
+            <div class="result-area">
+                <h3>计算结果</h3>
+                <div id="factorial-result"></div>
+            </div>
+        </div>
+
+        <!-- 斐波那契演示 -->
+        <div id="fibonacci-demo" class="demo-container">
+            <h2>斐波那契递归演示</h2>
+            <div class="controls">
+                <label>
+                    计算 F(n) : 
+                    <input type="number" id="fibonacci-input" min="0" max="10" value="5">
+                </label>
+                <button id="fibonacci-start">开始演示</button>
+                <button id="fibonacci-reset">重置</button>
+                <label>
+                    <input type="checkbox" id="fibonacci-auto"> 自动播放
+                </label>
+                <label>
+                    速度: <input type="range" id="fibonacci-speed" min="1" max="10" value="5">
+                </label>
+            </div>
+            
+            <div class="visualization-area">
+                <div class="tree-view">
+                    <h3>递归树</h3>
+                    <svg id="fibonacci-tree" width="800" height="400"></svg>
+                </div>
+                
+                <div class="call-sequence">
+                    <h3>调用序列</h3>
+                    <div id="fibonacci-sequence"></div>
+                </div>
+                
+                <div class="code-trace">
+                    <h3>代码追踪</h3>
+                    <pre id="fibonacci-code">
+function fibonacci(n) {
+    <span class="line" data-line="1">if (n <= 1) {</span>
+        <span class="line" data-line="2">return n;</span>
+    <span class="line" data-line="3">}</span>
+    <span class="line" data-line="4">return fibonacci(n - 1) + fibonacci(n - 2);</span>
+<span class="line" data-line="5">}</span>
+                    </pre>
+                </div>
+            </div>
+            
+            <div class="statistics">
+                <h3>统计信息</h3>
+                <p>函数调用次数: <span id="fibonacci-calls">0</span></p>
+                <p>重复计算次数: <span id="fibonacci-duplicates">0</span></p>
+            </div>
+        </div>
+
+        <!-- 汉诺塔演示 -->
+        <div id="tower-demo" class="demo-container">
+            <h2>汉诺塔递归演示</h2>
+            <div class="controls">
+                <label>
+                    盘子数量: 
+                    <input type="number" id="tower-input" min="1" max="6" value="3">
+                </label>
+                <button id="tower-start">开始演示</button>
+                <button id="tower-reset">重置</button>
+                <button id="tower-step">单步执行</button>
+                <label>
+                    速度: <input type="range" id="tower-speed" min="1" max="10" value="5">
+                </label>
+            </div>
+            
+            <div class="visualization-area">
+                <div class="tower-game">
+                    <h3>汉诺塔演示</h3>
+                    <div id="tower-canvas" class="tower-container">
+                        <div class="tower-pole" id="pole-A">
+                            <div class="pole-label">A</div>
+                            <div class="pole-stick"></div>
+                            <div class="pole-base"></div>
+                        </div>
+                        <div class="tower-pole" id="pole-B">
+                            <div class="pole-label">B</div>
+                            <div class="pole-stick"></div>
+                            <div class="pole-base"></div>
+                        </div>
+                        <div class="tower-pole" id="pole-C">
+                            <div class="pole-label">C</div>
+                            <div class="pole-stick"></div>
+                            <div class="pole-base"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="move-log">
+                    <h3>移动记录</h3>
+                    <div id="tower-moves"></div>
+                </div>
+            </div>
+            
+            <div class="algorithm-explain">
+                <h3>算法说明</h3>
+                <p>将 n 个盘子从 A 移到 C：</p>
+                <ol>
+                    <li>将 n-1 个盘子从 A 移到 B（借助 C）</li>
+                    <li>将最大的盘子从 A 移到 C</li>
+                    <li>将 n-1 个盘子从 B 移到 C（借助 A）</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- 二叉树遍历演示 -->
+        <div id="tree-demo" class="demo-container">
+            <h2>二叉树递归遍历演示</h2>
+            <div class="controls">
+                <label>
+                    遍历方式: 
+                    <select id="tree-traversal">
+                        <option value="preorder">前序遍历</option>
+                        <option value="inorder">中序遍历</option>
+                        <option value="postorder">后序遍历</option>
+                    </select>
+                </label>
+                <button id="tree-start">开始演示</button>
+                <button id="tree-reset">重置</button>
+                <button id="tree-step">单步执行</button>
+                <label>
+                    速度: <input type="range" id="tree-speed" min="1" max="10" value="5">
+                </label>
+            </div>
+            
+            <div class="visualization-area">
+                <div class="tree-structure">
+                    <h3>二叉树结构</h3>
+                    <svg id="binary-tree" width="600" height="400"></svg>
+                </div>
+                
+                <div class="traversal-result">
+                    <h3>遍历结果</h3>
+                    <div id="tree-result"></div>
+                </div>
+                
+                <div class="code-trace">
+                    <h3>代码追踪</h3>
+                    <pre id="tree-code">
+function traverse(node) {
+    <span class="line" data-line="1">if (node == null) return;</span>
+    
+    <span class="line preorder" data-line="2">// 前序：访问当前节点</span>
+    <span class="line" data-line="3">traverse(node.left);</span>
+    <span class="line inorder" data-line="4">// 中序：访问当前节点</span>
+    <span class="line" data-line="5">traverse(node.right);</span>
+    <span class="line postorder" data-line="6">// 后序：访问当前节点</span>
+<span class="line" data-line="7">}</span>
+                    </pre>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <div class="tips">
+                <h3>使用提示</h3>
+                <ul>
+                    <li>🎯 选择不同的演示查看各种递归模式</li>
+                    <li>🎮 使用控制按钮来控制动画播放</li>
+                    <li>🔍 观察调用栈的变化理解递归过程</li>
+                    <li>📊 注意代码高亮显示当前执行位置</li>
+                    <li>⚡ 调整速度以适合你的学习节奏</li>
+                </ul>
+            </div>
+        </footer>
+    </div>
+
+    <script src="../assets/js/visualization.js"></script>
+</body>
+</html>
